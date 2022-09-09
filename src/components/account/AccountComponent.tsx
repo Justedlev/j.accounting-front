@@ -16,7 +16,7 @@ function AccountComponent() {
   const accessToken: string = useAppSelector((state: RootState) => state.login.response.token.accessToken);
 
   useEffect(() => {
-    if (!isEmpty(nickname)) {
+    if (isEmpty(nickname)) {
       navigate(pathLabel.login.path);
     }
     if (nickname && !isEmpty(accessToken)) {

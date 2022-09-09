@@ -72,15 +72,16 @@ const loginSlice = createSlice({
       .addCase(login.fulfilled, (state, { payload }) => {
         state.response = { ...state.response, ...payload };
         if (!isEmpty(state.response.token.accessToken)) {
-          localStorage.setItem(ATK, JSON.stringify(state.response.token.accessToken));
-          localStorage.setItem(RTK, JSON.stringify(state.response.token.refreshToken));
+          localStorage.setItem(ATK, state.response.token.accessToken);
+          localStorage.setItem(RTK, state.response.token.refreshToken);
           state.isLogin = true;
         }
         state.isLoading = false;
       })
       .addCase(login.rejected, (state, action) => {
         localStorage.removeItem(ATK);
-        localStorage.removeItem(RTK);
+				localStorage.removeItem(RTK);
+				console.log(localStorage.getItem(ATK))
         if (action.payload) {
           state.error = action.payload.message;
         } else {

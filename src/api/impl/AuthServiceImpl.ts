@@ -20,7 +20,7 @@ export default class AuthServiceImpl implements AuthService {
       withCredentials: true,
     };
 
-    return axios.post<any>(`${this.url}/logout`, config).then((response) => response.data);
+    return axios.post<any>(`${this.url}/logout`, config);
   }
 
   async login(login: LoginRequest): Promise<LoginResponse> {
@@ -29,12 +29,13 @@ export default class AuthServiceImpl implements AuthService {
     });
     const config: AxiosRequestConfig = {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        // "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        // "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
       withCredentials: true,
     };
 
-    return axios.post(`${this.url}/login`, params, config).then((response) => response.data);
+    return axios.post(`${this.url}/login`, login, config).then((response) => response.data);
   }
 
   async signup(signup: SignupRequest): Promise<any> {

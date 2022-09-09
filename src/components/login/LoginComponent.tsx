@@ -16,7 +16,7 @@ function LoginComponent() {
   const navigate = useNavigate();
   const loginState: LoginState = useAppSelector((state: RootState) => state.login);
   const nickname = loginState.response.nickname;
-  const accountPath = `${pathLabel.account.path}/${loginState.response.nickname}`;
+  const accountPath = `${pathLabel.account.path}/${nickname}`;
 
   useEffect(() => {
     if (!isEmpty(nickname)) {
@@ -28,7 +28,7 @@ function LoginComponent() {
     nickname: "",
     email: "",
     password: "",
-		refresh: loginState.response.token.refreshToken,
+		// refresh: loginState.response.token.refreshToken,
   });
 
   return (
