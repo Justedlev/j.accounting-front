@@ -11,7 +11,7 @@ export default class AccountServiceImpl implements AccountService {
       headers: {
         Authorization: `${TOKEN_TYPE} ${accessToken}`,
       },
-      withCredentials: true,
+			withCredentials: true,
     };
 
     return axios.get<any>(`${this.url}/account/${nickname}`, config).then((response) => response.data);

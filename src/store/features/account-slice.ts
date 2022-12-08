@@ -1,7 +1,7 @@
+import { AxiosError } from 'axios';
 import { accountService } from "./../../config/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ErrorDetails from "../../models/ErrorDetails";
-import { AxiosError } from "axios";
 import { SOMETHING_WENT_WRONG } from "../../config/app-const";
 import AccountResponse from "../../models/response/AccountResponse";
 import Gender from "../../models/enum/Gender";
@@ -32,7 +32,8 @@ const initialState: AccountState = {
     },
     status: AccountStatusCode.UNDEFINED,
     mode: Mode.UNDEFINED,
-    registrationDate: 0,
+    registrationDate: "",
+		photoUrl: ""
   },
   error: "",
 };
@@ -73,7 +74,8 @@ const accountSlice = createSlice({
           },
           status: AccountStatusCode.UNDEFINED,
           mode: Mode.UNDEFINED,
-          registrationDate: 0,
+          registrationDate: "",
+					photoUrl: ""
         };
         state.error = "";
         state.isLoading = true;

@@ -17,10 +17,10 @@ export default class AuthServiceImpl implements AuthService {
       headers: {
         Authorization: `Bearer ${localStorage.getItem(ATK)}`,
       },
-      withCredentials: true,
+			withCredentials: true,
     };
 
-    return axios.post<any>(`${this.url}/logout`, config);
+    return axios.post<any>(`${this.url}/logout`, null, config).then((response) => response.data);
   }
 
   async login(login: LoginRequest): Promise<LoginResponse> {

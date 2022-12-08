@@ -33,6 +33,7 @@ const logoutSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(logout.pending, (state) => {
+				clearStorage();
         state.error = "";
         state.isLoading = true;
       })
@@ -54,7 +55,6 @@ const logoutSlice = createSlice({
 });
 
 function clearStorage(): void {
-  console.log("🚀 ~ file: logout-slice.ts ~ line 57 ~ clearStorage ~ clearStorage()")
   localStorage.removeItem(RTK);
   localStorage.removeItem(ATK);
 }

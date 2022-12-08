@@ -1,11 +1,12 @@
+import { AxiosError } from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import LoginRequest from "../../models/request/LoginRequest";
 import { authService } from "../../config/api";
 import { isEmpty } from "lodash";
 import LoginResponse from "../../models/response/LoginResponse";
 import ErrorDetails from "../../models/ErrorDetails";
-import { AxiosError } from "axios";
 import { ATK, SOMETHING_WENT_WRONG, RTK } from "../../config/app-const";
+import { decodeToken } from "react-jwt";
 
 export interface LoginState {
   isLoading: boolean;
@@ -21,8 +22,7 @@ const initialState: LoginState = {
   isLoading: false,
   isLogin: false,
   response: {
-    email: "",
-    nickname: "",
+    nickname: decodeToken<{sub: string}>(atk || "")?.sub || "",
     token: {
       accessToken: atk || "",
       refreshToken: rtk || "",
@@ -59,7 +59,6 @@ const loginSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.response.email = "";
         state.response.nickname = "";
         state.isLogin = false;
         state.response.token = {
@@ -70,18 +69,17 @@ const loginSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, { payload }) => {
-        state.response = { ...state.response, ...payload };
-        if (!isEmpty(state.response.token.accessToken)) {
-          localStorage.setItem(ATK, state.response.token.accessToken);
-          localStorage.setItem(RTK, state.response.token.refreshToken);
-          state.isLogin = true;
-        }
+        state.response.token = { ...state.response.token, ...payload };
+        state.response.nickname = decodeToken<{sub: string}>(state.response.token.accessToken)?.sub || "";
+        localStorage.setItem(ATK, state.response.token.accessToken);
+        localStorage.setItem(RTK, state.response.token.refreshToken);
+        state.isLogin = true;
         state.isLoading = false;
       })
       .addCase(login.rejected, (state, action) => {
         localStorage.removeItem(ATK);
-				localStorage.removeItem(RTK);
-				console.log(localStorage.getItem(ATK))
+        localStorage.removeItem(RTK);
+        console.log(localStorage.getItem(ATK));
         if (action.payload) {
           state.error = action.payload.message;
         } else {

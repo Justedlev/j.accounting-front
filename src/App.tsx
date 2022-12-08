@@ -11,7 +11,6 @@ import { RootState } from "./store/store";
 
 function App() {
   const appState = useAppSelector((state: RootState) => state);
-  console.log("🚀 ~ file: App.tsx ~ line 14 ~ App ~ state", appState);
 
   return (
     <>

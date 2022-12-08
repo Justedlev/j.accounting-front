@@ -15,11 +15,12 @@ function LoginComponent() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const loginState: LoginState = useAppSelector((state: RootState) => state.login);
+	const accessToken: string = useAppSelector((state: RootState) => state.login.response.token.accessToken);
   const nickname = loginState.response.nickname;
   const accountPath = `${pathLabel.account.path}/${nickname}`;
 
   useEffect(() => {
-    if (!isEmpty(nickname)) {
+    if (!isEmpty(accessToken)) {
       navigate(accountPath);
     }
   }, [navigate, nickname, accountPath]);

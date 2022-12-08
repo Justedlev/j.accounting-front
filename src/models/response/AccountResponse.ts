@@ -13,7 +13,8 @@ interface AccountResponse {
   phoneNumberInfo: PhoneNumberResponse;
   status: AccountStatusCode;
   mode: Mode;
-  registrationDate: number;
+  registrationDate: string;
+	photoUrl: string
 }
 
 export default AccountResponse;

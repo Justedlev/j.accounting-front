@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
 import MessageComponent from "../message/MessageComponent";
@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { pathLabel } from "../../config/menu";
 import { accountByNickname, AccountState } from "../../store/features/account-slice";
+import { Photo } from "@mui/icons-material";
 
 function AccountComponent() {
   const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ function AccountComponent() {
   const accessToken: string = useAppSelector((state: RootState) => state.login.response.token.accessToken);
 
   useEffect(() => {
-    if (isEmpty(nickname)) {
+    if (isEmpty(accessToken)) {
       navigate(pathLabel.login.path);
     }
     if (nickname && !isEmpty(accessToken)) {
@@ -41,6 +42,7 @@ function AccountComponent() {
           <Typography component="p" align="center" sx={{ m: 5 }}>
             {`Welcome ${accountState.response.nickname}!`}
           </Typography>
+					<img src={`${accountState.response.photoUrl}`}></img>
         </>
       )}
     </>
