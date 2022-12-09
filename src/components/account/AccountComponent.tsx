@@ -14,6 +14,7 @@ function AccountComponent() {
   const { nickname } = useParams();
   const navigate = useNavigate();
   const accountState: AccountState = useAppSelector((state: RootState) => state.account);
+  console.log("🚀 ~ file: AccountComponent.tsx:17 ~ AccountComponent ~ accountState", accountState)
   const accessToken: string = useAppSelector((state: RootState) => state.login.response.token.accessToken);
 
   useEffect(() => {
@@ -41,8 +42,9 @@ function AccountComponent() {
           )}
           <Typography component="p" align="center" sx={{ m: 5 }}>
             {`Welcome ${accountState.response.nickname}!`}
+						<Avatar alt={`${accountState.response.nickname}`} src={`${accountState.response.photoUrl}`} sx={{ width: 56, height: 56 }}></Avatar>
           </Typography>
-					<img src={`${accountState.response.photoUrl}`}></img>
+					
         </>
       )}
     </>
