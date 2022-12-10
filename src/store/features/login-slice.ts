@@ -6,6 +6,8 @@ import LoginResponse from "../../models/response/LoginResponse";
 import ErrorDetails from "../../models/ErrorDetails";
 import { ATK, SOMETHING_WENT_WRONG, RTK } from "../../config/app-const";
 import { decodeToken } from "react-jwt";
+import { accountByNickname } from "./account-slice";
+import TokenResponse from "../../models/response/TokenResponse";
 
 export interface LoginState {
   isLoading: boolean;
@@ -21,7 +23,7 @@ const initialState: LoginState = {
   isLoading: false,
   isLogin: false,
   response: {
-    nickname: decodeToken<{sub: string}>(atk || "")?.sub || "",
+    nickname: decodeToken<{ sub: string }>(atk || "")?.sub || "",
     token: {
       accessToken: atk || "",
       refreshToken: rtk || "",
@@ -30,10 +32,18 @@ const initialState: LoginState = {
   error: "",
 };
 
-export const login = createAsyncThunk<LoginResponse, LoginRequest, { rejectValue: AxiosError<ErrorDetails> }>(
+export const login = createAsyncThunk<TokenResponse, LoginRequest, { rejectValue: AxiosError<ErrorDetails> }>(
   "auth/login",
-  async (request, thunkApi) =>
-    authService.login(request).catch((error) => thunkApi.rejectWithValue(error.response.data || error))
+  async (request, thunkApi) => {
+    try {
+      const response: TokenResponse = await authService.login(request);
+      const nickname = decodeToken<{ sub: string }>(response.accessToken || "")?.sub || "";
+      thunkApi.dispatch(accountByNickname({ nickname, accessToken: response.accessToken }));
+      return response;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response.data || error);
+    }
+  }
 );
 
 const loginSlice = createSlice({
@@ -61,9 +71,9 @@ const loginSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, { payload }) => {
         state.response.token = { ...state.response.token, ...payload };
-        state.response.nickname = decodeToken<{sub: string}>(state.response.token.accessToken)?.sub || "";
-        localStorage.setItem(ATK, state.response.token.accessToken);
-        localStorage.setItem(RTK, state.response.token.refreshToken);
+        state.response.nickname = decodeToken<{ sub: string }>(state.response.token.accessToken)?.sub || "";
+        // localStorage.setItem(ATK, state.response.token.accessToken);
+        // localStorage.setItem(RTK, state.response.token.refreshToken);
         state.isLogin = true;
         state.isLoading = false;
       })

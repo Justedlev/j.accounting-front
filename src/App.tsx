@@ -6,8 +6,13 @@ import LoginComponent from "./components/login/LoginComponent";
 import NavbarComponent from "./components/navigation/NavbarComponent";
 import SignupComponent from "./components/signup/SignupComponent";
 import { pathLabel } from "./config/menu";
+import { useAppSelector } from "./store/hooks";
+import { RootState } from "./store/store";
 
 function App() {
+	const appState = useAppSelector((state: RootState) => state);
+	console.log("🚀 ~ file: App.tsx:14 ~ App ~ appState", appState)
+
   return (
     <>
       <NavbarComponent />

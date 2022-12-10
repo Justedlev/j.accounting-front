@@ -14,11 +14,12 @@ function AccountComponent() {
   const accountState: AccountState = useAppSelector((state: RootState) => state.account);
   const accessToken: string = useAppSelector((state: RootState) => state.login.response.token.accessToken);
 
-  useEffect(() => {
-    if (nickname && !isEmpty(accessToken)) {
-      dispatch(accountByNickname({ nickname, accessToken }));
-    }
-  }, [dispatch, nickname, accessToken]);
+  // useEffect(() => {
+  //   console.log("🚀 ~ file: AccountComponent.tsx:18 ~ useEffect ~ useEffect")
+  //   if (nickname) {
+  //     dispatch(accountByNickname({ nickname }));
+  //   }
+  // }, [dispatch, nickname]);
 
   if (accountState.isLoading) {
     return (
@@ -33,11 +34,12 @@ function AccountComponent() {
   }
 
   return (
-    <Box >
+    <Box>
       {!isEmpty(accountState.error) && <MessageComponent isOpen message={accountState.error} type="error" />}
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: 420, margin: "auto", marginTop: "50px" }}>
         <CardMedia
           component="img"
+					height="390"
           image={`${accountState.response.photoUrl}`}
           alt={`${accountState.response.nickname}`}
         />
@@ -46,8 +48,16 @@ function AccountComponent() {
             {accountState.response.nickname}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all
-            continents except Antarctica
+            Email: {accountState.response.email}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Full name: {accountState.response.firstName} {accountState.response.lastName}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Registration: {accountState.response.registrationDate}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Birth Date: {accountState.response.birthDate}
           </Typography>
         </CardContent>
       </Card>

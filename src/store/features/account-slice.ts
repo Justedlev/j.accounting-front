@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError } from "axios";
 import { accountService } from "./../../config/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ErrorDetails from "../../models/ErrorDetails";
@@ -20,7 +20,7 @@ const initialState: AccountState = {
     nickname: "",
     firstName: "",
     lastName: "",
-    birthDate: 0,
+    birthDate: "",
     gender: Gender.UNDEFINED,
     email: "",
     phoneNumberInfo: {
@@ -32,7 +32,7 @@ const initialState: AccountState = {
     status: AccountStatusCode.UNDEFINED,
     mode: Mode.UNDEFINED,
     registrationDate: "",
-		photoUrl: ""
+    photoUrl: "",
   },
   error: "",
 };
@@ -41,11 +41,13 @@ export const accountByNickname = createAsyncThunk<
   AccountResponse,
   { nickname: string, accessToken: string },
   { rejectValue: AxiosError<ErrorDetails> }
->("account/nickname", async (request, thunkApi) =>
-  accountService
+>("account/nickname", async (request, thunkApi) => {
+  const response = await accountService
     .getAccountByNickname(request.nickname, request.accessToken)
-    .catch((error) => thunkApi.rejectWithValue(error.response.data || error))
-);
+    .catch((error) => thunkApi.rejectWithValue(error.response.data || error));
+
+  return response;
+});
 
 const accountSlice = createSlice({
   name: "accountByEmail",
@@ -62,7 +64,7 @@ const accountSlice = createSlice({
           nickname: "",
           firstName: "",
           lastName: "",
-          birthDate: 0,
+          birthDate: "",
           gender: Gender.UNDEFINED,
           email: "",
           phoneNumberInfo: {
@@ -74,7 +76,7 @@ const accountSlice = createSlice({
           status: AccountStatusCode.UNDEFINED,
           mode: Mode.UNDEFINED,
           registrationDate: "",
-					photoUrl: ""
+          photoUrl: "",
         };
         state.error = "";
         state.isLoading = true;
@@ -84,7 +86,7 @@ const accountSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(accountByNickname.rejected, (state, action) => {
-        console.log("🚀 ~ file: account-slice.ts:88 ~ .addCase ~ action", action)
+        console.log("🚀 ~ file: account-slice.ts:88 ~ .addCase ~ action", action);
         if (action.payload) {
           state.error = action.payload.message;
         } else {

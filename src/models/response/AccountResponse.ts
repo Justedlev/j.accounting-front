@@ -7,7 +7,7 @@ interface AccountResponse {
   nickname: string;
   firstName: string;
   lastName: string;
-  birthDate: number;
+  birthDate: string;
   gender: Gender;
   email: string;
   phoneNumberInfo: PhoneNumberResponse;
