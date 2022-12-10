@@ -14,12 +14,12 @@ function AccountComponent() {
   const accountState: AccountState = useAppSelector((state: RootState) => state.account);
   const accessToken: string = useAppSelector((state: RootState) => state.login.response.token.accessToken);
 
-  // useEffect(() => {
-  //   console.log("🚀 ~ file: AccountComponent.tsx:18 ~ useEffect ~ useEffect")
-  //   if (nickname) {
-  //     dispatch(accountByNickname({ nickname }));
-  //   }
-  // }, [dispatch, nickname]);
+  useEffect(() => {
+    if (nickname && isEmpty(accountState.response.nickname)) {
+      console.log("🚀 ~ file: AccountComponent.tsx:19 ~ useEffect ~ isEmpty(accountState.response.nickname)", isEmpty(accountState.response.nickname))
+      dispatch(accountByNickname({ nickname , accessToken }));
+    }
+  }, [dispatch, nickname, accessToken, accountState.response.nickname]);
 
   if (accountState.isLoading) {
     return (
