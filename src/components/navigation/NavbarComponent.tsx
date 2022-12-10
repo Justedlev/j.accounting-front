@@ -35,7 +35,6 @@ function NavbarComponent() {
     <AppBar position="static">
       <Toolbar>
         <NavLink className={classes.logo} to={pathLabel.home.path}>
-          {/* <img className={classes.logo_icon} alt="logo" /> */}
           <span className={classes.logo_title}>{pathLabel.home.label}</span>
         </NavLink>
         {isEmpty(loginState.response.token.accessToken) ? getLoginElement() : getLogoutElement()}

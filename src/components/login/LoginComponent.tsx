@@ -1,11 +1,11 @@
 import { Avatar, Card, CardActions, CardContent, Link, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import LoginRequest from "../../models/request/LoginRequest";
 import { login, LoginState } from "../../store/features/login-slice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { isEmpty } from "lodash";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import MessageComponent from "../message/MessageComponent";
 import accountImage from "../../assets/programmer.png";
 import { RootState } from "../../store/store";
@@ -17,13 +17,6 @@ function LoginComponent() {
   const loginState: LoginState = useAppSelector((state: RootState) => state.login);
 	const accessToken: string = useAppSelector((state: RootState) => state.login.response.token.accessToken);
   const nickname = loginState.response.nickname;
-  const accountPath = `${pathLabel.account.path}/${nickname}`;
-
-  useEffect(() => {
-    if (!isEmpty(accessToken)) {
-      navigate(accountPath);
-    }
-  }, [navigate, nickname, accountPath]);
 
   const [loginInput, setLoginInput] = useState<LoginRequest>({
     nickname: "",
@@ -31,6 +24,10 @@ function LoginComponent() {
     password: "",
 		// refresh: loginState.response.token.refreshToken,
   });
+
+	if (!isEmpty(accessToken) && !isEmpty(nickname)) {
+		return <Navigate to={`${pathLabel.account.path}/${nickname}`} />;
+	}
 
   return (
     <>

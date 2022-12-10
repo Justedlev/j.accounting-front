@@ -7,7 +7,6 @@ import AccountResponse from "../../models/response/AccountResponse";
 import Gender from "../../models/enum/Gender";
 import AccountStatusCode from "../../models/enum/AccountStatusCode";
 import Mode from "../../models/enum/Mode";
-import TokenResponse from "../../models/response/TokenResponse";
 
 export interface AccountState {
   isLoading: boolean;
@@ -45,7 +44,7 @@ export const accountByNickname = createAsyncThunk<
 >("account/nickname", async (request, thunkApi) =>
   accountService
     .getAccountByNickname(request.nickname, request.accessToken)
-    .catch((error) => thunkApi.rejectWithValue(error.response.data))
+    .catch((error) => thunkApi.rejectWithValue(error.response.data || error))
 );
 
 const accountSlice = createSlice({
@@ -85,6 +84,7 @@ const accountSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(accountByNickname.rejected, (state, action) => {
+        console.log("🚀 ~ file: account-slice.ts:88 ~ .addCase ~ action", action)
         if (action.payload) {
           state.error = action.payload.message;
         } else {
