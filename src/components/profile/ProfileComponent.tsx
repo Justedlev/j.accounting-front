@@ -8,7 +8,7 @@ import { isEmpty } from "lodash";
 import { pathLabel } from "../../config/menu";
 import { accountByNickname, AccountState } from "../../store/features/account-slice";
 
-function AccountComponent() {
+function ProfileComponent() {
   const dispatch = useAppDispatch();
   const { nickname } = useParams();
   const accountState: AccountState = useAppSelector((state: RootState) => state.account);
@@ -65,4 +65,4 @@ function AccountComponent() {
   );
 }
 
-export default AccountComponent;
+export default ProfileComponent;

@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.sass";
-import AccountComponent from "./components/account/AccountComponent";
+import ProfileComponent from "./components/profile/ProfileComponent";
 import HomeComponent from "./components/home/HomeComponent";
 import LoginComponent from "./components/login/LoginComponent";
 import NavbarComponent from "./components/navigation/NavbarComponent";
@@ -21,7 +21,7 @@ function App() {
         <Route path={pathLabel.login.path} element={<LoginComponent />} />
         <Route path={pathLabel.signup.path} element={<SignupComponent />} />
         <Route path={pathLabel.account.path}>
-          <Route path={":nickname"} element={<AccountComponent />} />
+          <Route path={":nickname"} element={<ProfileComponent />} />
         </Route>
         <Route path="*" element={<Navigate replace to={pathLabel.home.path} />} />
       </Routes>
