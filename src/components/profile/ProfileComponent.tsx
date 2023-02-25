@@ -48,11 +48,11 @@ function ProfileComponent() {
           <Typography gutterBottom variant="h5" component="div">
             {accountState.response.nickname}
           </Typography>
-					{
+					{/* {
 					accountState.response.contacts.forEach(value => <Typography variant="body2" color="text.secondary">
             Email: {value.email}
           </Typography>)
-					}
+					} */}
           <Typography variant="body2" color="text.secondary">
             Full name: {accountState.response.firstName} {accountState.response.lastName}
           </Typography>
