@@ -6,16 +6,11 @@ import { RootState } from "../../store/store";
 
 function HomeComponent() {
   const loginState: LoginState = useAppSelector((state: RootState) => state.login);
-	const accountUrl = `${pathLabel.account.path}/${loginState.response.nickname}`;
+  const accountUrl = `${pathLabel.account.path}/${loginState.response.nickname}`;
 
   return (
     <Typography component="p" align="center" sx={{ m: 5 }}>
-      Welcome in j.Hub!{" "}
-      {
-        <Link href={accountUrl}>
-          {loginState.response.nickname}
-        </Link>
-      }
+      Welcome in j.Hub! {<Link href={accountUrl}>{loginState.response.nickname}</Link>}
     </Typography>
   );
 }

@@ -1,11 +1,13 @@
+import { AxiosError } from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import LoginRequest from "../../models/request/LoginRequest";
 import { authService } from "../../config/api";
-import { isEmpty } from "lodash";
 import LoginResponse from "../../models/response/LoginResponse";
 import ErrorDetails from "../../models/ErrorDetails";
-import { AxiosError } from "axios";
 import { ATK, SOMETHING_WENT_WRONG, RTK } from "../../config/app-const";
+import { decodeToken } from "react-jwt";
+import { accountByNickname } from "./account-slice";
+import TokenResponse from "../../models/response/TokenResponse";
 
 export interface LoginState {
   isLoading: boolean;
@@ -21,8 +23,7 @@ const initialState: LoginState = {
   isLoading: false,
   isLogin: false,
   response: {
-    email: "",
-    nickname: "",
+    nickname: decodeToken<{ sub: string }>(atk || "")?.sub || "",
     token: {
       accessToken: atk || "",
       refreshToken: rtk || "",
@@ -31,18 +32,18 @@ const initialState: LoginState = {
   error: "",
 };
 
-export const login = createAsyncThunk<LoginResponse, LoginRequest, { rejectValue: AxiosError<ErrorDetails> }>(
+export const login = createAsyncThunk<TokenResponse, LoginRequest, { rejectValue: AxiosError<ErrorDetails> }>(
   "auth/login",
-  async (request, thunkApi) =>
-    authService.login(request).catch((error) => {
-      // if (error.status === 401) {
-      //   console.log("🚀 ~ file: login-slice.ts ~ line 39 ~ error.status === 401 ~ refresh started");
-      //   authService
-      //     .refresh(request.refresh)
-      //     .catch((error) => thunkApi.rejectWithValue(error.response.data || error));
-      // }
+  async (request, thunkApi) => {
+    try {
+      const response: TokenResponse = await authService.login(request);
+      const nickname = decodeToken<{ sub: string }>(response.accessToken || "")?.sub || "";
+      thunkApi.dispatch(accountByNickname({ nickname, accessToken: response.accessToken }));
+      return response;
+    } catch (error: any) {
       return thunkApi.rejectWithValue(error.response.data || error);
-    })
+    }
+  }
 );
 
 const loginSlice = createSlice({
@@ -59,7 +60,6 @@ const loginSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.response.email = "";
         state.response.nickname = "";
         state.isLogin = false;
         state.response.token = {
@@ -70,18 +70,14 @@ const loginSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, { payload }) => {
-        state.response = { ...state.response, ...payload };
-        if (!isEmpty(state.response.token.accessToken)) {
-          localStorage.setItem(ATK, state.response.token.accessToken);
-          localStorage.setItem(RTK, state.response.token.refreshToken);
-          state.isLogin = true;
-        }
+        state.response.token = { ...state.response.token, ...payload };
+        state.response.nickname = decodeToken<{ sub: string }>(state.response.token.accessToken)?.sub || "";
+        // localStorage.setItem(ATK, state.response.token.accessToken);
+        // localStorage.setItem(RTK, state.response.token.refreshToken);
+        state.isLogin = true;
         state.isLoading = false;
       })
       .addCase(login.rejected, (state, action) => {
-        localStorage.removeItem(ATK);
-				localStorage.removeItem(RTK);
-				console.log(localStorage.getItem(ATK))
         if (action.payload) {
           state.error = action.payload.message;
         } else {

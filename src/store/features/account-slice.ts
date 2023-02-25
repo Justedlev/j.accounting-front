@@ -1,13 +1,12 @@
+import { AxiosError } from "axios";
 import { accountService } from "./../../config/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ErrorDetails from "../../models/ErrorDetails";
-import { AxiosError } from "axios";
 import { SOMETHING_WENT_WRONG } from "../../config/app-const";
 import AccountResponse from "../../models/response/AccountResponse";
 import Gender from "../../models/enum/Gender";
 import AccountStatusCode from "../../models/enum/AccountStatusCode";
 import Mode from "../../models/enum/Mode";
-import TokenResponse from "../../models/response/TokenResponse";
 
 export interface AccountState {
   isLoading: boolean;
@@ -21,31 +20,28 @@ const initialState: AccountState = {
     nickname: "",
     firstName: "",
     lastName: "",
-    birthDate: 0,
+    birthDate: new Date(),
     gender: Gender.UNDEFINED,
-    email: "",
-    phoneNumberInfo: {
-      fullNumber: "",
-      countryCode: 0,
-      nationalNumber: 0,
-      regionCode: "",
-    },
+    contacts: new Array(),
     status: AccountStatusCode.UNDEFINED,
     mode: Mode.UNDEFINED,
-    registrationDate: 0,
+    registrationDate: new Date(),
+    avatarUrl: "",
   },
   error: "",
 };
 
 export const accountByNickname = createAsyncThunk<
   AccountResponse,
-  { nickname: string, accessToken: string },
+  { nickname: string; accessToken: string },
   { rejectValue: AxiosError<ErrorDetails> }
->("account/nickname", async (request, thunkApi) =>
-  accountService
+>("account/nickname", async (request, thunkApi) => {
+  const response = await accountService
     .getAccountByNickname(request.nickname, request.accessToken)
-    .catch((error) => thunkApi.rejectWithValue(error.response.data))
-);
+    .catch((error) => thunkApi.rejectWithValue(error.response.data || error));
+
+  return response;
+});
 
 const accountSlice = createSlice({
   name: "accountByEmail",
@@ -62,18 +58,13 @@ const accountSlice = createSlice({
           nickname: "",
           firstName: "",
           lastName: "",
-          birthDate: 0,
+          birthDate: new Date(),
           gender: Gender.UNDEFINED,
-          email: "",
-          phoneNumberInfo: {
-            fullNumber: "",
-            countryCode: 0,
-            nationalNumber: 0,
-            regionCode: "",
-          },
+          contacts: new Array(),
           status: AccountStatusCode.UNDEFINED,
           mode: Mode.UNDEFINED,
-          registrationDate: 0,
+          registrationDate: new Date(),
+          avatarUrl: "",
         };
         state.error = "";
         state.isLoading = true;
@@ -83,6 +74,7 @@ const accountSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(accountByNickname.rejected, (state, action) => {
+        console.log("🚀 ~ file: account-slice.ts:88 ~ .addCase ~ action", action);
         if (action.payload) {
           state.error = action.payload.message;
         } else {

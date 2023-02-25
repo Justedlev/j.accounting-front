@@ -1,7 +1,7 @@
 interface PhoneNumberResponse {
-  fullNumber: string;
+  national: number;
+  international: string;
   countryCode: number;
-  nationalNumber: number;
   regionCode: string;
 }
 

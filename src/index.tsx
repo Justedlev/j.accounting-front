@@ -12,7 +12,6 @@ const container = document.getElementById("root")!;
 const root = createRoot(container);
 
 root.render(
-  <React.StrictMode>
     <CookiesProvider>
       <Provider store={store}>
         <Router>
@@ -20,7 +19,6 @@ root.render(
         </Router>
       </Provider>
     </CookiesProvider>
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
