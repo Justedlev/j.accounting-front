@@ -6,6 +6,10 @@ import AccountService from "../AccountService";
 export default class AccountServiceImpl implements AccountService {
   constructor(private url: string) {}
 
+	getUrl(): string {
+		return `${this.url}/jaccount-service/api/v1`;
+	}
+
   async getAccountByNickname(nickname: string, accessToken: string): Promise<AccountResponse> {
     const config: AxiosRequestConfig = {
       headers: {
@@ -14,6 +18,6 @@ export default class AccountServiceImpl implements AccountService {
 			withCredentials: true,
     };
 
-    return axios.get<any>(`${this.url}/account/${nickname}`, config).then((response) => response.data);
+    return axios.get<AccountResponse>(`${this.getUrl()}/account/${nickname}`, config).then((response) => response.data);
   }
 }

@@ -20,26 +20,20 @@ const initialState: AccountState = {
     nickname: "",
     firstName: "",
     lastName: "",
-    birthDate: "",
+    birthDate: new Date(),
     gender: Gender.UNDEFINED,
-    email: "",
-    phoneNumberInfo: {
-      fullNumber: "",
-      countryCode: 0,
-      nationalNumber: 0,
-      regionCode: "",
-    },
+    contacts: new Array(),
     status: AccountStatusCode.UNDEFINED,
     mode: Mode.UNDEFINED,
-    registrationDate: "",
-    photoUrl: "",
+    registrationDate: new Date(),
+    avatarUrl: "",
   },
   error: "",
 };
 
 export const accountByNickname = createAsyncThunk<
   AccountResponse,
-  { nickname: string, accessToken: string },
+  { nickname: string; accessToken: string },
   { rejectValue: AxiosError<ErrorDetails> }
 >("account/nickname", async (request, thunkApi) => {
   const response = await accountService
@@ -64,19 +58,13 @@ const accountSlice = createSlice({
           nickname: "",
           firstName: "",
           lastName: "",
-          birthDate: "",
+          birthDate: new Date(),
           gender: Gender.UNDEFINED,
-          email: "",
-          phoneNumberInfo: {
-            fullNumber: "",
-            countryCode: 0,
-            nationalNumber: 0,
-            regionCode: "",
-          },
+          contacts: new Array(),
           status: AccountStatusCode.UNDEFINED,
           mode: Mode.UNDEFINED,
-          registrationDate: "",
-          photoUrl: "",
+          registrationDate: new Date(),
+          avatarUrl: "",
         };
         state.error = "";
         state.isLoading = true;

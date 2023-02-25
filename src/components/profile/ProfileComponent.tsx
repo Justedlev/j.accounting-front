@@ -7,6 +7,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { pathLabel } from "../../config/menu";
 import { accountByNickname, AccountState } from "../../store/features/account-slice";
+import justedlevhub from "../../assets/justedlevhub.jpg";
 
 function ProfileComponent() {
   const dispatch = useAppDispatch();
@@ -29,9 +30,9 @@ function ProfileComponent() {
     );
   }
 
-  if (isEmpty(accessToken)) {
-    return <Navigate to={pathLabel.login.path} />;
-  }
+  // if (isEmpty(accessToken)) {
+  //   return <Navigate to={pathLabel.login.path} />;
+  // }
 
   return (
     <Box>
@@ -40,24 +41,26 @@ function ProfileComponent() {
         <CardMedia
           component="img"
 					height="390"
-          image={`${accountState.response.photoUrl}`}
+          image={`${accountState.response.avatarUrl || justedlevhub}`}
           alt={`${accountState.response.nickname}`}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {accountState.response.nickname}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Email: {accountState.response.email}
-          </Typography>
+					{
+					accountState.response.contacts.forEach(value => <Typography variant="body2" color="text.secondary">
+            Email: {value.email}
+          </Typography>)
+					}
           <Typography variant="body2" color="text.secondary">
             Full name: {accountState.response.firstName} {accountState.response.lastName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Registration: {accountState.response.registrationDate}
+            Registration: {accountState.response.registrationDate.toDateString()}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Birth Date: {accountState.response.birthDate}
+            Birth Date: {accountState.response.birthDate.toDateString()}
           </Typography>
         </CardContent>
       </Card>
