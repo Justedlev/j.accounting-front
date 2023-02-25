@@ -30,9 +30,9 @@ function ProfileComponent() {
     );
   }
 
-  // if (isEmpty(accessToken)) {
-  //   return <Navigate to={pathLabel.login.path} />;
-  // }
+  if (isEmpty(accessToken)) {
+    return <Navigate to={pathLabel.login.path} />;
+  }
 
   return (
     <Box>
