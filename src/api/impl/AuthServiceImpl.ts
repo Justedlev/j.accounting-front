@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import LoginResponse from "../../models/response/LoginResponse";
 import LoginRequest from "../../models/request/LoginRequest";
 import SignupRequest from "../../models/request/SignupRequest";
 import AuthService from "../AuthService";
@@ -40,18 +39,22 @@ export default class AuthServiceImpl implements AuthService {
   }
 
   async signup(signup: SignupRequest): Promise<any> {
-    const params = new URLSearchParams({
-      ...signup,
-      birthDate: signup.birthDate.getTime().toString(),
-      gender: signup.gender.toString(),
-    });
+    // const params = new URLSearchParams({
+    //   ...signup,
+    //   birthDate: signup.birthDate?.getTime().toString(),
+    //   gender: signup.gender?.toString(),
+    // });
     const config: AxiosRequestConfig = {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      },
+      // headers: {
+      //   "Content-Type": "application/x-www-form-urlencoded",
+      // },
       withCredentials: true,
     };
 
-    return axios.post<any>(`${this.url}/signup`, params, config).then((response) => response.data);
+    
+    return axios.post<any>(`${this.url}/sign-up`, {...signup, birthDate:signup.birthDate}, config).then((response) => {
+      console.log("🚀 ~ file: AuthServiceImpl.ts:58 ~ AuthServiceImpl ~ signup ~ JSON.stringify(signup):", JSON.stringify(signup))
+      return response.data
+    })
   }
 }

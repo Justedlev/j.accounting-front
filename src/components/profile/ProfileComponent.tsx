@@ -57,10 +57,10 @@ function ProfileComponent() {
             Full name: {accountState.response.firstName} {accountState.response.lastName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Registration: {accountState.response.registrationDate.toDateString()}
+            Registration: {accountState.response.registrationDate}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Birth Date: {accountState.response.birthDate.toDateString()}
+            Birth Date: {accountState.response.birthDate}
           </Typography>
         </CardContent>
       </Card>
